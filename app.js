@@ -2,6 +2,10 @@ import express from 'express';
 import errorMiddleware from './middlewares/error.middleware.js';
 import {PORT} from './config/env.js'; // adjust if needed
 import connectToDatabase from './database/mongodb.js';
+import authRouter from './routes/auth.routes.js';
+import userRouter from './routes/user.routes.js';
+import categoryRouter from './routes/category.routes.js';
+import shopRouter from './routes/shop.routes.js';
 
 const app = express();
 
@@ -12,6 +16,10 @@ app.get('/', (req, res) => {
 });
 
 // Your other routes will go here...
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/categories', categoryRouter);
+app.use('/api/v1/shopS', shopRouter)
 
 // Error middleware should be after all routes
 app.use(errorMiddleware);

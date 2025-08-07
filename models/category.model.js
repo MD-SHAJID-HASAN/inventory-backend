@@ -1,11 +1,15 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 const categorySchema = new mongoose.Schema({
-    type: String,
+    name:{
+        type: String,
+        required: [true, "Category Name is Mandatory!"],
+        unique: true,
+    },
     shopId: {
         type: Types.ObjectId,
         ref: 'Shop',
-        required: true,
+        // required: true,
     },
 
     allowedUnits: [
@@ -28,4 +32,4 @@ const categorySchema = new mongoose.Schema({
 
 const Category = mongoose.model('Category', categorySchema)
 
-export default categorySchema;
+export default Category;
