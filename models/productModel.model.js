@@ -1,22 +1,22 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
-const productModelSchema = new mongoose.model({
+const productModelSchema = new mongoose.Schema({
     shopId: {
-        type: Types.objectId,
+        type: Types.ObjectId,
         ref: 'Shop',
         required: true,
     },
     categoryId: {
-        type: Types.objectId,
+        type: Types.ObjectId,
         ref: 'Category',
-        required: true,
+        // required: true,
     },
     brandId: {
-        type: Types.objectId,
+        type: Types.ObjectId,
         ref: 'Brand',
         required: true,
     },
-    modelName: {
+    name: {
         type: String,
         required: true,
         trim: true,
@@ -28,11 +28,12 @@ const productModelSchema = new mongoose.model({
     },
     sizeUnit: {
         type: String,
-        required: true,
+        required: [true, 'Size Unit is required!']
     },
     currentStock: {
         type: Number,
         default: 0,
+        required: [true, 'Current Stock is required']
     },
     averageCost: {
         type: Number,
@@ -41,6 +42,7 @@ const productModelSchema = new mongoose.model({
     lastPurchasePrice: {
         type: Number,
         default: 0,
+        required:[true, 'Purchase Price is Required!']
     },
     isActive: {
         type: Boolean,

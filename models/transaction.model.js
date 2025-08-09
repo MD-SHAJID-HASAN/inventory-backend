@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
-const transactionSchema = mongoose.model({
+const transactionSchema = new mongoose.Schema({
     shopId: {
-        type: Types.objectId,
+        type: Types.ObjectId,
         ref: 'Shop',
         required: [true, 'Shop Type is required']
     },
@@ -18,7 +18,7 @@ const transactionSchema = mongoose.model({
     },
     items: [{
         ProductModelId: {
-            type: String,
+            type: Types.ObjectId,
             ref: 'ProductModel',
             required: true,
         },
@@ -40,9 +40,7 @@ const transactionSchema = mongoose.model({
         required: true,
         trim: true,
     },
-
-
-}, { Timestamps: true });
+}, { timestamps: true });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
 

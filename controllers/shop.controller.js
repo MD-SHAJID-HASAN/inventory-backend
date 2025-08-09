@@ -23,7 +23,7 @@ export const createShop = async (req, res, next) => {
     }
 }
 
-export const getShop = async ({ req, res, next }) => {
+export const getShops = async ({ req, res, next }) => {
 
     try {
         const shops = await Shop.find({

@@ -26,7 +26,7 @@ export const createCategory = async (req, res, next) => {
     }
 }
 
-export const getCategory = async (req, res, next) => {
+export const getCategories = async (req, res, next) => {
     try {
         const categories = await Category.find({
             user: req.params.id
