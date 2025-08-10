@@ -5,7 +5,8 @@ export const createShop = async (req, res, next) => {
 
         const { name } = req.body;
 
-        const existingShop = Shop.findOne({ name });
+        const existingShop = await Shop.findOne({ name });
+
         if (existingShop) {
             const error = new Error("Shop already exists");
             error.statusCode = 409;
@@ -14,7 +15,7 @@ export const createShop = async (req, res, next) => {
 
         const shop = await Shop.create({
             ...req.body,
-            user: req.user._id,
+            createdBy: req.user._id,
         })
 
         res.status(201).json({ success: true, data: shop })
@@ -23,16 +24,17 @@ export const createShop = async (req, res, next) => {
     }
 }
 
-export const getShops = async ({ req, res, next }) => {
+export const getShops = async (req, res, next) => {
 
     try {
         const shops = await Shop.find({
-            user: req.params.id
+            createdBy: req.params.id
         })
 
         res.status(200).json({
             success: true, data: shops
-        })
+        });
+
     } catch (error) {
         next(error);
     }

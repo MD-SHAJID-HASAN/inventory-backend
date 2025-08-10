@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 const shopSchema = new mongoose.Schema({
     name: {
@@ -27,6 +27,8 @@ const shopSchema = new mongoose.Schema({
         default: true,
     },
     createdBy: {
+        // type: Types.ObjectId,
+        // ref: 'User',
         type: String,
         required: true,
         trim: true,

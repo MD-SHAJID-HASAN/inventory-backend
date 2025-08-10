@@ -1,11 +1,11 @@
 import Brand from "../models/brand.model.js";
 
-export const createBrand = async ({ req, res, next }) => {
+export const createBrand = async ( req, res, next) => {
 
     try {
-        const { name, } = req.body;
+        const { name, } = await req.body;
 
-        const existingBrand = await Brand({ name });
+        const existingBrand = await Brand.findOne({ name });
 
         if (existingBrand) {
             const error = new Error("Brand already exists!")
@@ -15,7 +15,7 @@ export const createBrand = async ({ req, res, next }) => {
 
         const brand = await Brand.create({
             ...req.body,
-            user: req.user._id,
+            createdBy: req.user._id,
         })
 
         res.status(201).json({ success: true, data: brand })

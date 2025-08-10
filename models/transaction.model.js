@@ -33,6 +33,10 @@ const transactionSchema = new mongoose.Schema({
         sizeUnit: {
             type: String,
             required: true,
+        },
+        unitPrice: {
+            type: Number,
+            required: [true, 'Unit Price is required!']
         }
     }],
     createdBy: {
