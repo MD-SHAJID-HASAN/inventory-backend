@@ -1,10 +1,12 @@
 import { Router } from "express";
 import authorize from "../middlewares/auth.middleware.js";
-import { createCategory, getCategories } from "../controllers/category.controller.js";
+import { createCategory, getCategories, getCategoriesById, getCategoriesByShopId } from "../controllers/category.controller.js";
 
 const categoryRouter = Router();
 
-categoryRouter.post('/', authorize, createCategory)
-categoryRouter.get('/', authorize, getCategories)
+categoryRouter.post('/', authorize, createCategory);
+categoryRouter.get('/', getCategories);
+categoryRouter.get('/:categoryId', getCategoriesById);
+categoryRouter.get('/shop/:shopId', getCategoriesByShopId);
 
 export default categoryRouter;

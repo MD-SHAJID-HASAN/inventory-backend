@@ -29,12 +29,38 @@ export const createCategory = async (req, res, next) => {
 export const getCategories = async (req, res, next) => {
     try {
         const categories = await Category.find({
-            user: req.params.id
+            // createdBy: 'abc'
         });
 
         res.status(200).json({
             success: true, data: categories
         });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getCategoriesByShopId = async (req, res, next) => {
+    try {
+        const { shopId } = req.params;
+
+        const categories = await Category.find({ shopId }).populate('brandIds');
+
+
+        res.status(200).json({ success: true, data: categories })
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getCategoriesById = async (req, res, next) => {
+    try {
+        const { categoryId } = req.params;
+
+        const category = await Category.findById(categoryId).populate('brandIds')
+
+
+        res.status(200).json({ success: true, data: category })
     } catch (error) {
         next(error);
     }

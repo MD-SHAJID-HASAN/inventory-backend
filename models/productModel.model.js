@@ -9,7 +9,7 @@ const productModelSchema = new mongoose.Schema({
     categoryId: {
         type: Types.ObjectId,
         ref: 'Category',
-        // required: true,
+        // required: true, 
     },
     brandId: {
         type: Types.ObjectId,
@@ -22,10 +22,11 @@ const productModelSchema = new mongoose.Schema({
         trim: true,
         required: true,
     },
-    size: {
+    size: [{
         type: String,
         required: true,
-    },
+    }],
+
     sizeUnit: {
         type: String,
         required: [true, 'Size Unit is required!']
@@ -33,7 +34,7 @@ const productModelSchema = new mongoose.Schema({
     currentStock: {
         type: Number,
         default: 0,
-        required: [true, 'Current Stock is required']
+        required: [true, 'Current Stock is required!']
     },
     averageCost: {
         type: Number,
@@ -42,7 +43,7 @@ const productModelSchema = new mongoose.Schema({
     lastPurchasePrice: {
         type: Number,
         default: 0,
-        required:[true, 'Purchase Price is Required!']
+        required: [true, 'Purchase Price is Required!']
     },
     isActive: {
         type: Boolean,

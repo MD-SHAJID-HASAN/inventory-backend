@@ -28,7 +28,7 @@ export const getShops = async (req, res, next) => {
 
     try {
         const shops = await Shop.find({
-            createdBy: req.params.id
+            // createdBy: req.params.id
         })
 
         res.status(200).json({

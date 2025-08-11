@@ -1,6 +1,7 @@
 import express from 'express';
+import cors from 'cors';
 import errorMiddleware from './middlewares/error.middleware.js';
-import {PORT} from './config/env.js'; // adjust if needed
+import { PORT } from './config/env.js'; // adjust if needed
 import connectToDatabase from './database/mongodb.js';
 import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
@@ -11,6 +12,13 @@ import productModelRouter from './routes/productModel.routes.js';
 import transactionRouter from './routes/transaction.routes.js';
 
 const app = express();
+
+
+
+app.use(cors({
+    origin: 'http://localhost:5173',  // your frontend URL
+    credentials: true,                 // if you want to send cookies/auth headers
+}));
 
 app.use(express.json()); // to parse JSON body
 

@@ -5,6 +5,6 @@ import { createBrand, getBrands } from "../controllers/brand.controller.js";
 const brandRouter = Router();
 
 brandRouter.post('/', authorize, createBrand);
-brandRouter.get('/', authorize, getBrands)
+brandRouter.get('/', getBrands)
 
 export default brandRouter;

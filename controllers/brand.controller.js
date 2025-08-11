@@ -28,7 +28,7 @@ export const createBrand = async ( req, res, next) => {
 export const getBrands = async ({ req, res, next }) => {
 
     const brands = await Brand.find({
-        user: req.params.id
+        // user: req.params.id
     });
 
     res.status(200).json({

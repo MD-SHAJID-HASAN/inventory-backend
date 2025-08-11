@@ -9,7 +9,7 @@ const categorySchema = new mongoose.Schema({
     shopId: {
         type: Types.ObjectId,
         ref: 'Shop',
-        // required: true,
+        required: true,
     },
 
     allowedUnits: [
