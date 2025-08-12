@@ -1,60 +1,63 @@
 import Transaction from "../models/transaction.model.js";
 import ProductModel from "../models/productModel.model.js";
+import mongoose from "mongoose";
 
 export const createTransaction = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-        const transaction = await Transaction.create({
+        const transaction = await Transaction.create([{
             ...req.body,
             createdBy: req.user._id,
-        });
+        }], { session });
 
-        for (const item of transaction.items) {
-            const product = await ProductModel.findById(item.ProductModelId);
+        for (const item of transaction[0].items) {
+            const product = await ProductModel.findById(item.ProductModelId).session(session);
 
+            if (!product) continue;
 
+            // Find the size entry
+            const sizeEntry = product.sizes.find(s => s.size === item.size);
+            if (!sizeEntry) {
+                throw new Error(`Size ${item.size} not found for ${product.name}`);
+            }
 
-            if (!product) continue; // skip if product doesn't exist
+            const oldStock = sizeEntry.stock || 0;
 
-            const oldStock = product.currentStock || 0;
+            if (transaction[0].transactionType === "incoming") {
+                sizeEntry.stock = oldStock + item.quantity;
 
-            if (transaction.transactionType === "incoming") {
-                // Increase stock
-                product.currentStock = oldStock + item.quantity;
-
-                // Update last purchase price
                 product.lastPurchasePrice = item.unitPrice;
 
-                console.log(item.unitPrice)
-                console.log('testing the type here!',typeof(product.averageCost))
-
-                // Weighted average cost calculation
+                // Weighted average cost per product (not per size here)
                 const totalCostBefore = (product.averageCost || 0) * oldStock;
                 const totalNewCost = item.unitPrice * item.quantity;
                 product.averageCost =
                     (totalCostBefore + totalNewCost) / (oldStock + item.quantity);
 
-                                console.log('Updating product:', product.name, 'Old stock:', oldStock, 'Adding:', item.quantity);
-
-            } else if (transaction.transactionType === "outgoing") {
-                // Check stock availability first
+            } else if (transaction[0].transactionType === "outgoing") {
                 if (oldStock < item.quantity) {
-                    return res.status(400).json({
-                        success: false,
-                        message: `Insufficient stock for ${product.modelName}`,
-                    });
+                    throw new Error(`Insufficient stock for ${product.name} - ${item.size}`);
                 }
-                // Decrease stock
-                product.currentStock = oldStock - item.quantity;
+                sizeEntry.stock = oldStock - item.quantity;
             }
 
-            await product.save();
+            await product.save({ session });
         }
 
-        res.status(201).json({ success: true, data: transaction });
+        await session.commitTransaction();
+        session.endSession();
+
+        res.status(201).json({ success: true, data: transaction[0] });
+
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         next(error);
     }
 };
+
 
 export const getTransactions = async (req, res, next) => {
     try {
