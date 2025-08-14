@@ -4,7 +4,7 @@ import { createCategory, getCategories, getCategoriesById, getCategoriesByShopId
 
 const categoryRouter = Router();
 
-categoryRouter.post('/', authorize, createCategory);
+categoryRouter.post('/', createCategory);
 categoryRouter.get('/', getCategories);
 categoryRouter.get('/:categoryId', getCategoriesById);
 categoryRouter.get('/shop/:shopId', getCategoriesByShopId);
