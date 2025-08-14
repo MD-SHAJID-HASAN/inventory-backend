@@ -17,7 +17,7 @@ export const createCategory = async (req, res, next) => {
 
         const category = await Category.create({
             ...req.body,
-            createdBy: req.user._id,
+            // createdBy: req.user._id,
         });
 
         res.status(201).json({ success: true, data: category })
