@@ -4,7 +4,7 @@ import { createTransaction, getTransactionById, getTransactions } from "../contr
 
 const transactionRouter = Router();
 
-transactionRouter.post('/', authorize, createTransaction);
+transactionRouter.post('/', createTransaction);
 transactionRouter.get('/', authorize, getTransactions);
 transactionRouter.get('/:id', authorize, getTransactionById);
 // transactionRouter.delete('/:id', authorize, deleteTransaction);

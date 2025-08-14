@@ -16,7 +16,7 @@ export const createProductModel = async (req, res, next) => {
         const productModel = await ProductModel.create({
             ...req.body,
             createdBy:  'Shajid',
-            averageCost: req.body.lastPurchasePrice
+            averageCost: req.body.averageCost
         });
         res.status(201).json({ success: true, data: productModel })
 

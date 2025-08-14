@@ -143,7 +143,7 @@ const productModelSchema = new mongoose.Schema(
             type: String,
             required: [true, "Unit is required!"],
         },
-        stock: {
+        totalStock: {
             type: Number,
             default: 0,
             required: [true, "Current Stock is required!"],
