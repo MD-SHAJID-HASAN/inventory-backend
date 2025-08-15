@@ -64,3 +64,26 @@ export const getProductModelsByCategoryAndBrandId = async (req, res, next) => {
     next(error);
   }
 };
+export const getProductModelsByCategoryId = async (req, res, next) => {
+  try {
+    const { categoryId } = req.params;
+
+    if (!categoryId) {
+      return res.status(400).json({
+        success: false,
+        message: "categoryId and brandId are required",
+      });
+    }
+
+    const productModels = await ProductModel.find({
+      categoryId
+    })
+
+    res.status(200).json({
+      success: true,
+      data: productModels,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
