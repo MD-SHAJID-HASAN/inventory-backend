@@ -1,4 +1,5 @@
 import express from 'express';
+import { swaggerUi, swaggerSpec } from './config/swagger.js';
 import cors from 'cors';
 import errorMiddleware from './middlewares/error.middleware.js';
 import { PORT } from './config/env.js'; // adjust if needed
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 });
 
 // Your other routes will go here...
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/categories', categoryRouter);
