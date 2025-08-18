@@ -108,7 +108,7 @@ import authorize from "../middlewares/auth.middleware.js";
 
 const shopRouter = Router();
 
-shopRouter.post('/', authorize, createShop);
+shopRouter.post('/', createShop);
 shopRouter.get('/', getShops);
 
 export default shopRouter;
