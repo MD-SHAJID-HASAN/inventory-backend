@@ -17,7 +17,7 @@ const categorySchema = new mongoose.Schema({
     },
 
     allowedUnits: [
-        allowedUnits],
+        AllowedUnitSchema],
 
     brandIds: [{
         type: Types.ObjectId,
