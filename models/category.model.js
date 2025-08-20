@@ -1,5 +1,9 @@
 import mongoose, { Types } from "mongoose";
 
+const AllowedUnitSchema = new mongoose.Schema({
+  value: { type: String, required: true },
+});
+
 const categorySchema = new mongoose.Schema({
     name:{
         type: String,
@@ -13,7 +17,7 @@ const categorySchema = new mongoose.Schema({
     },
 
     allowedUnits: [
-        { type: String }],
+        allowedUnits],
 
     brandIds: [{
         type: Types.ObjectId,
