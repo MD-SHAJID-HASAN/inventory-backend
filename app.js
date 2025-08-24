@@ -17,7 +17,7 @@ const app = express();
 
 
 app.use(cors({
-    origin: 'https://ledgerly-lilac.vercel.app/',  //frontend URL
+    origin: 'https://ledgerly-lilac.vercel.app',  //frontend URL
     credentials: true,
 }));
 
