@@ -17,7 +17,7 @@ const app = express();
 
 
 app.use(cors({
-    origin: 'https://inventory-manager-0sfi.onrender.com',  //frontend URL
+    origin: 'https://ledgerly-lilac.vercel.app/',  //frontend URL
     credentials: true,
 }));
 
