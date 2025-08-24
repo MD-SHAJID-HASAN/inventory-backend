@@ -2,7 +2,7 @@ import express from 'express';
 import { swaggerUi, swaggerSpec } from './config/swagger.js';
 import cors from 'cors';
 import errorMiddleware from './middlewares/error.middleware.js';
-import { PORT } from './config/env.js';
+import { FRONTEND_URL, PORT } from './config/env.js';
 import connectToDatabase from './database/mongodb.js';
 import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
@@ -17,7 +17,7 @@ const app = express();
 
 
 app.use(cors({
-    origin: 'https://ledgerly-lilac.vercel.app',  //frontend URL
+    origin: FRONTEND_URL,  //frontend URL
     credentials: true,
 }));
 

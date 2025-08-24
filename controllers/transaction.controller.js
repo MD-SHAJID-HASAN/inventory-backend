@@ -108,12 +108,14 @@ export const createTransaction = async (req, res, next) => {
 
 export const getTransactions = async (req, res, next) => {
     try {
-        const transactions = await Transaction.find()
+        const transactions = await Transaction.find().sort({ _id: -1 }).limit(10)
             .populate("items.ProductModelId", "modelName currentStock lastPurchasePrice");
         res.status(200).json({
             success: true,
             data: transactions,
         });
+
+        console.log(transactions)
     } catch (error) {
         next(error);
     }

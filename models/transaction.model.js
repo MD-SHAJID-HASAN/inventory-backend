@@ -11,7 +11,7 @@ const transactionSchema = new mongoose.Schema(
       type: String,
       default: "N/A",
       required: true,
-      trim: true,  
+      trim: true,
     },
     transactionType: {
       type: String,
@@ -46,6 +46,12 @@ const transactionSchema = new mongoose.Schema(
         },
       },
     ],
+
+    total: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
     createdBy: {
       type: String,
       required: true,
