@@ -17,7 +17,7 @@ const app = express();
 
 
 app.use(cors({
-    origin: FRONTEND_URL,  //frontend URL
+    origin: 'https://inventory-manager-0sfi.onrender.com',  //frontend URL
     credentials: true,
 }));
 
