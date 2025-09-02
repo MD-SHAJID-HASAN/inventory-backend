@@ -1,6 +1,7 @@
 import Transaction from "../models/transaction.model.js";
 import ProductModel from "../models/productModel.model.js";
 import mongoose from "mongoose";
+import Summary from "../models/summary.model.js";
 
 export const createTransaction = async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -23,7 +24,8 @@ export const createTransaction = async (req, res, next) => {
 
       if (!product) {
         console.log("No product found!")
-        continue;}
+        continue;
+      }
 
       if (product?.hasVariation) {
         // Find matching size
@@ -36,7 +38,7 @@ export const createTransaction = async (req, res, next) => {
         }
 
         const oldStock = productWithSize.currentStock || 0;
-        console.log('Current stock of the product',oldStock)
+        console.log('Current stock of the product', oldStock)
 
         if (transaction[0].transactionType === "incoming") {
           productWithSize.currentStock = oldStock + item.quantity;
@@ -63,9 +65,9 @@ export const createTransaction = async (req, res, next) => {
         product.averageCost =
           product.totalStock > 0
             ? product.sizes.reduce(
-                (sum, s) => sum + (s.averageCost * s.currentStock || 0),
-                0
-              ) / product.totalStock
+              (sum, s) => sum + (s.averageCost * s.currentStock || 0),
+              0
+            ) / product.totalStock
             : 0;
 
       } else {
@@ -93,6 +95,58 @@ export const createTransaction = async (req, res, next) => {
       await product.save({ session });
     }
 
+   // calculate totalAmount from items if not present
+let amount = transaction[0].totalAmount;
+if (!amount || amount === 0) {
+  amount = transaction[0].items.reduce(
+    (sum, i) => sum + (i.unitPrice * i.quantity || 0),
+    0
+  );
+  transaction[0].totalAmount = amount;
+  await transaction[0].save({ session });
+}
+
+// get normalized day key
+const trxDate = new Date(transaction[0].createdAt);
+const dayKey = new Date(trxDate.getFullYear(), trxDate.getMonth(), trxDate.getDate());
+
+// find or create summary
+let summary = await Summary.findOne({ date: dayKey });
+if (!summary) {
+  summary = new Summary({
+    date: dayKey,
+    incomingTotal: 0,
+    outgoingTotal: 0,
+    inOutBasedOnShop: [],
+  });
+}
+
+// update totals
+if (transaction[0].transactionType === "incoming") summary.incomingTotal += amount;
+else summary.outgoingTotal += amount;
+
+// update per shop
+if (transaction[0].shopId) {
+  let shopEntry = summary.inOutBasedOnShop.find(
+    (s) => s.shopId.toString() === transaction[0].shopId.toString()
+  );
+
+  if (!shopEntry) {
+    summary.inOutBasedOnShop.push({
+      shopId: transaction[0].shopId,
+      incoming: transaction[0].transactionType === "incoming" ? amount : 0,
+      outgoing: transaction[0].transactionType === "outgoing" ? amount : 0,
+    });
+  } else {
+    if (transaction[0].transactionType === "incoming") shopEntry.incoming += amount;
+    else shopEntry.outgoing += amount;
+  }
+}
+
+// finally save summary
+await summary.save({ session });
+
+
     await session.commitTransaction();
     session.endSession();
 
@@ -107,31 +161,31 @@ export const createTransaction = async (req, res, next) => {
 
 
 export const getTransactions = async (req, res, next) => {
-    try {
-        const transactions = await Transaction.find().sort({ _id: -1 }).limit(10)
-            .populate("items.ProductModelId", "modelName currentStock lastPurchasePrice");
-        res.status(200).json({
-            success: true,
-            data: transactions,
-        });
+  try {
+    const transactions = await Transaction.find().sort({ _id: -1 }).limit(10)
+      .populate("items.ProductModelId", "modelName currentStock lastPurchasePrice");
+    res.status(200).json({
+      success: true,
+      data: transactions,
+    });
 
-        console.log(transactions)
-    } catch (error) {
-        next(error);
-    }
+    console.log(transactions)
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getTransactionById = async (req, res, next) => {
-    try {
-        const transactionById = await Transaction.find({
-            user: req.params.id
-        }).populate("items.ProductModelId", "modelName");
+  try {
+    const transactionById = await Transaction.find({
+      user: req.params.id
+    }).populate("items.ProductModelId", "modelName");
 
-        res.status(200).json({
-            success: true,
-            data: transactionById,
-        }); 
-    } catch (error) {
-        next(error);
-    }
+    res.status(200).json({
+      success: true,
+      data: transactionById,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

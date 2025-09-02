@@ -25,7 +25,6 @@ const transactionSchema = new mongoose.Schema(
           ref: "ProductModel",
           required: true,
         },
-        // For non-variation products, size and sizeUnit can be empty
         size: {
           type: String,
           default: "",
